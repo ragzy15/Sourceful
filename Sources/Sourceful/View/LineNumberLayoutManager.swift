@@ -133,8 +133,8 @@ class LineNumberLayoutManager: NSLayoutManager {
 			
 		}
 		
-		let rect = BezierPath(rect: CGRect(x: 0, y: 0, width: 200, height: 500))
-		Color.red.withAlphaComponent(0.5).setFill()
+		let rect = SFBezierPath(rect: CGRect(x: 0, y: 0, width: 200, height: 500))
+        SFColor.red.withAlphaComponent(0.5).setFill()
 		rect.fill()
 	}
 

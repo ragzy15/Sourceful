@@ -47,7 +47,7 @@ struct ThemeInfo {
 }
 
 @IBDesignable
-open class SyntaxTextView: _View {
+open class SyntaxTextView: _SFView {
 
     var previousSelectedRange: NSRange?
 
@@ -55,7 +55,7 @@ open class SyntaxTextView: _View {
 
     let textView: InnerTextView
 
-    public var contentTextView: TextView {
+    public var contentTextView: SFTextView {
         return textView
     }
 
@@ -522,8 +522,8 @@ open class SyntaxTextView: _View {
 
                 textStorage.addAttributes(theme.attributes(for: token), range: contentRange)
 
-                textStorage.addAttributes([.foregroundColor: Color.clear, .font: Font.systemFont(ofSize: 0.01)], range: startRange)
-                textStorage.addAttributes([.foregroundColor: Color.clear, .font: Font.systemFont(ofSize: 0.01)], range: endRange)
+                textStorage.addAttributes([.foregroundColor: SFColor.clear, .font: SFFont.systemFont(ofSize: 0.01)], range: startRange)
+                textStorage.addAttributes([.foregroundColor: SFColor.clear, .font: SFFont.systemFont(ofSize: 0.01)], range: endRange)
 
                 textStorage.addAttributes(attr, range: range)
                 continue
@@ -534,5 +534,4 @@ open class SyntaxTextView: _View {
 
         textStorage.endEditing()
     }
-
 }

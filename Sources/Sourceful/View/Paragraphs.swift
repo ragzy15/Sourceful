@@ -14,7 +14,7 @@ import Foundation
 	import UIKit
 #endif
 
-extension TextView {
+extension SFTextView {
 	
 	func paragraphRectForRange(range: NSRange) -> CGRect {
 		

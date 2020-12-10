@@ -6,28 +6,36 @@
 
 import Foundation
 
+#if canImport(Combine)
+
+import Combine
+
 #if canImport(SwiftUI)
 
 import SwiftUI
 
 #if os(macOS)
-
+@available(macOS 10.15, *)
 public typealias _ViewRepresentable = NSViewRepresentable
 
 #endif
 
 #if os(iOS)
 
+@available(iOS 13.0, *)
 public typealias _ViewRepresentable = UIViewRepresentable
 
 #endif
 
 
+@available(iOS 13.0, macOS 10.15, *)
 public struct SourceCodeTextEditor: _ViewRepresentable {
+    
+    public static let textUpdateNotification = Notification.Name("SourceCodeTextEditor_stextUpdateNotification")
     
     public struct Customization {
         var didChangeText: (SourceCodeTextEditor) -> Void
-        var insertionPointColor: () -> Sourceful.Color
+        var insertionPointColor: () -> SFColor
         var lexerForSource: (String) -> Lexer
         var textViewDidBeginEditing: (SourceCodeTextEditor) -> Void
         var theme: () -> SourceCodeTheme
@@ -42,7 +50,7 @@ public struct SourceCodeTextEditor: _ViewRepresentable {
         ///     - theme: Custom theme (default: DefaultSourceCodeTheme()).
         public init(
             didChangeText: @escaping (SourceCodeTextEditor) -> Void,
-            insertionPointColor: @escaping () -> Sourceful.Color,
+            insertionPointColor: @escaping () -> SFColor,
             lexerForSource: @escaping (String) -> Lexer,
             textViewDidBeginEditing: @escaping (SourceCodeTextEditor) -> Void,
             theme: @escaping () -> SourceCodeTheme
@@ -57,20 +65,20 @@ public struct SourceCodeTextEditor: _ViewRepresentable {
     
     @Binding private var text: String
     
-    private var custom: Customization
+    private var customization: Customization
     
     public init(
         text: Binding<String>,
-        cusotmization: Customization = Customization(
-            didChangeText: {_ in },
-            insertionPointColor: { Sourceful.Color.white },
-            lexerForSource: { _ in SwiftLexer() },
+        customization: Customization = Customization(
+            didChangeText: { _ in },
+            insertionPointColor: { SFColor.white },
+            lexerForSource: { _ in JSONLexer() },
             textViewDidBeginEditing: { _ in },
             theme: { DefaultSourceCodeTheme() }
         )
     ) {
         self._text = text
-        self.custom = cusotmization
+        self.customization = customization
     }
     
     public func makeCoordinator() -> Coordinator {
@@ -81,7 +89,7 @@ public struct SourceCodeTextEditor: _ViewRepresentable {
     public func makeUIView(context: Context) -> SyntaxTextView {
         let wrappedView = SyntaxTextView()
         wrappedView.delegate = context.coordinator
-        wrappedView.theme = custom.theme()
+        wrappedView.theme = customization.theme()
 //        wrappedView.contentTextView.insertionPointColor = custom.insertionPointColor()
         
         context.coordinator.wrappedView = wrappedView
@@ -98,8 +106,8 @@ public struct SourceCodeTextEditor: _ViewRepresentable {
     public func makeNSView(context: Context) -> SyntaxTextView {
         let wrappedView = SyntaxTextView()
         wrappedView.delegate = context.coordinator
-        wrappedView.theme = custom.theme()
-        wrappedView.contentTextView.insertionPointColor = custom.insertionPointColor()
+        wrappedView.theme = customization.theme()
+        wrappedView.contentTextView.insertionPointColor = customization.insertionPointColor()
         
         context.coordinator.wrappedView = wrappedView
         context.coordinator.wrappedView.text = text
@@ -110,22 +118,34 @@ public struct SourceCodeTextEditor: _ViewRepresentable {
     public func updateNSView(_ view: SyntaxTextView, context: Context) {
     }
     #endif
-    
-
 }
 
+@available(iOS 13.0, macOS 10.15, *)
 extension SourceCodeTextEditor {
     
     public class Coordinator: SyntaxTextViewDelegate {
         let parent: SourceCodeTextEditor
         var wrappedView: SyntaxTextView!
         
+        private var textUpdateNotificationObserver: AnyCancellable?
+        
         init(_ parent: SourceCodeTextEditor) {
             self.parent = parent
+            
+            textUpdateNotificationObserver = NotificationCenter.default.publisher(for: SourceCodeTextEditor.textUpdateNotification)
+                .compactMap { $0.userInfo?["text"] as? String }
+                .receive(on: DispatchQueue.main)
+                .sink(receiveValue: { (newText) in
+                    self.wrappedView.text = newText
+                })
+        }
+        
+        deinit {
+            textUpdateNotificationObserver?.cancel()
         }
         
         public func lexerForSource(_ source: String) -> Lexer {
-            parent.custom.lexerForSource(source)
+            parent.customization.lexerForSource(source)
         }
         
         public func didChangeText(_ syntaxTextView: SyntaxTextView) {
@@ -134,13 +154,14 @@ extension SourceCodeTextEditor {
             }
             
             // allow the client to decide on thread
-            parent.custom.didChangeText(parent)
+            parent.customization.didChangeText(parent)
         }
         
         public func textViewDidBeginEditing(_ syntaxTextView: SyntaxTextView) {
-            parent.custom.textViewDidBeginEditing(parent)
+            parent.customization.textViewDidBeginEditing(parent)
         }
     }
 }
 
+#endif
 #endif

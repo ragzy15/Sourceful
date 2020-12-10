@@ -21,7 +21,7 @@ extension NSTextView {
 		}
 	}
 	
-	var tintColor: Color {
+	var tintColor: SFColor {
 		set {
 			insertionPointColor = newValue
 		}

@@ -52,5 +52,4 @@ public class JavaLexer: SourceCodeRegexLexer {
     public func generators(source: String) -> [TokenGenerator] {
         return generators
     }
-    
 }

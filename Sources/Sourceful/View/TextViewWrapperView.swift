@@ -9,14 +9,14 @@
 import Foundation
 
 #if os(macOS)
-	import AppKit
+import AppKit
 #else
-	import UIKit
+import UIKit
 #endif
 
 #if os(macOS)
 	
-	class TextViewWrapperView: _View {
+	class TextViewWrapperView: _SFView {
 		
 		override func hitTest(_ point: NSPoint) -> NSView? {
 			// Disable interaction, so we're not blocking the text view.
@@ -57,7 +57,7 @@ import Foundation
 				textView.hideGutter()
 				
 				let gutterRect = CGRect(x: 0, y: rect.minY, width: textView.gutterWidth, height: rect.height)
-				let path = BezierPath(rect: gutterRect)
+				let path = SFBezierPath(rect: gutterRect)
 				path.fill()
 				
 			} else {
@@ -92,7 +92,7 @@ import Foundation
 				theme.gutterStyle.backgroundColor.setFill()
 			
 				let gutterRect = CGRect(x: 0, y: 0, width: textView.gutterWidth, height: rect.height)
-				let path = BezierPath(rect: gutterRect)
+				let path = SFBezierPath(rect: gutterRect)
 				path.fill()
 			
 				drawLineNumbers(paragraphs, in: rect, for: textView)

@@ -4,14 +4,15 @@
 </p>
 
 <p align="center">
-    <img src="https://img.shields.io/badge/iOS-12.0+-blue.svg" />
-    <img src="https://img.shields.io/badge/Swift-5.0-brightgreen.svg" />
+    <img src="https://img.shields.io/badge/iOS-10.0+-blue.svg" />
+    <img src="https://img.shields.io/badge/macOS-10.12+-blue.svg" />
+    <img src="https://img.shields.io/badge/Swift-5.3-brightgreen.svg" />
     <a href="https://twitter.com/twostraws">
         <img src="https://img.shields.io/badge/Contact-@twostraws-lightgrey.svg?style=flat" alt="Twitter: @twostraws" />
     </a>
 </p>
 
-Sourceful is a syntax text editor for iOS and macOS, providing subclasses of `UITextView` and `NSTextView` that offer live syntax highlighting as you type. Right now it includes syntax highlighting support for Swift and Python, but it's easy to add your own.
+Sourceful is a syntax text editor for iOS and macOS, providing subclasses of `UITextView` and `NSTextView` that offer live syntax highlighting as you type. Right now it includes syntax highlighting support for Swift, Python, JavaScript, HTML, XML and JSON but it's easy to add your own.
 
 This project is a combination of two projects from Louis D’hauwe: [SavannaKit](https://github.com/louisdh/savannakit) and [Source Editor](https://github.com/louisdh/source-editor).
 

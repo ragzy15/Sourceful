@@ -69,8 +69,8 @@ public extension NSMutableAttributedString {
 				
 				self.addAttributes(theme.attributes(for: token), range: contentRange)
 				
-				self.addAttributes([.foregroundColor: Color.clear, .font: Font.systemFont(ofSize: 0.01)], range: startRange)
-				self.addAttributes([.foregroundColor: Color.clear, .font: Font.systemFont(ofSize: 0.01)], range: endRange)
+				self.addAttributes([.foregroundColor: SFColor.clear, .font: SFFont.systemFont(ofSize: 0.01)], range: startRange)
+				self.addAttributes([.foregroundColor: SFColor.clear, .font: SFFont.systemFont(ofSize: 0.01)], range: endRange)
 				
 				self.addAttributes(attr, range: range)
 				continue

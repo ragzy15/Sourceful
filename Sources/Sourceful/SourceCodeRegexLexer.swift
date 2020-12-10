@@ -12,11 +12,20 @@ public protocol SourceCodeRegexLexer: RegexLexer {
 }
 
 extension RegexLexer {
-	public func regexGenerator(_ pattern: String, options: NSRegularExpression.Options = [], transformer: @escaping TokenTransformer) -> TokenGenerator? {
+    
+    public func regexGenerator(_ identifierPattern: String, highlighterPattern: String?, options: NSRegularExpression.Options = [], transformer: @escaping TokenTransformer) -> TokenGenerator? {
 		
-		guard let regex = try? NSRegularExpression(pattern: pattern, options: options) else {
+		guard let regex = try? NSRegularExpression(pattern: identifierPattern, options: options) else {
 			return nil
 		}
+        
+        if let highlighterPattern = highlighterPattern {
+            guard let highlightRegex = try? NSRegularExpression(pattern: highlighterPattern, options: options) else {
+                return nil
+            }
+            
+            return .regex(RegexTokenGenerator(regularExpression: regex, highligterRegularExpression: highlightRegex, tokenTransformer: transformer))
+        }
 		
 		return .regex(RegexTokenGenerator(regularExpression: regex, tokenTransformer: transformer))
 	}
@@ -25,9 +34,9 @@ extension RegexLexer {
 
 extension SourceCodeRegexLexer {
 	
-	public func regexGenerator(_ pattern: String, options: NSRegularExpression.Options = [], tokenType: SourceCodeTokenType) -> TokenGenerator? {
+	public func regexGenerator(_ identifierPattern: String, highlighterPattern: String? = nil, options: NSRegularExpression.Options = [], tokenType: SourceCodeTokenType) -> TokenGenerator? {
 		
-		return regexGenerator(pattern, options: options, transformer: { (range) -> Token in
+		return regexGenerator(identifierPattern, highlighterPattern: highlighterPattern, options: options, transformer: { (range) -> Token in
 			return SimpleSourceCodeToken(type: tokenType, range: range)
 		})
 	}

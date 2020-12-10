@@ -80,11 +80,11 @@ class SyntaxTextViewLayoutManager: NSLayoutManager {
 			
 			// UIBezierPath with rounded
 			
-			let color: Color
+			let color: SFColor
 			
 			switch state {
 			case .active:
-				color = Color.white.withAlphaComponent(0.8)
+				color = SFColor.white.withAlphaComponent(0.8)
 			case .inactive:
 				color = .darkGray
 			}
@@ -95,11 +95,11 @@ class SyntaxTextViewLayoutManager: NSLayoutManager {
 			
 			#if os(macOS)
 
-				let path = BezierPath(roundedRect: rect, xRadius: radius, yRadius: radius)
+				let path = SFBezierPath(roundedRect: rect, xRadius: radius, yRadius: radius)
 
 			#else
 				
-				let path = BezierPath(roundedRect: rect, cornerRadius: radius)
+				let path = SFBezierPath(roundedRect: rect, cornerRadius: radius)
 
 			#endif
 			

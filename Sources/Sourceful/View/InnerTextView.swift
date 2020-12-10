@@ -19,7 +19,7 @@ protocol InnerTextViewDelegate: class {
 	func didUpdateCursorFloatingState()
 }
 
-class InnerTextView: TextView {
+class InnerTextView: SFTextView {
 	
 	weak var innerDelegate: InnerTextViewDelegate?
 	
@@ -81,7 +81,7 @@ class InnerTextView: TextView {
 			hideGutter()
 
 			let gutterRect = CGRect(x: 0, y: rect.minY, width: textView.gutterWidth, height: rect.height)
-			let path = BezierPath(rect: gutterRect)
+			let path = SFBezierPath(rect: gutterRect)
 			path.fill()
 			
 		} else {
@@ -110,7 +110,7 @@ class InnerTextView: TextView {
 			theme.gutterStyle.backgroundColor.setFill()
 			
 			let gutterRect = CGRect(x: 0, y: rect.minY, width: textView.gutterWidth, height: rect.height)
-			let path = BezierPath(rect: gutterRect)
+			let path = SFBezierPath(rect: gutterRect)
 			path.fill()
 			
 			drawLineNumbers(paragraphs, in: rect, for: self)

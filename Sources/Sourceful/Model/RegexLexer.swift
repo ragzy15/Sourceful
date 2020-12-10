@@ -11,13 +11,16 @@ import Foundation
 public typealias TokenTransformer = (_ range: Range<String.Index>) -> Token
 
 public struct RegexTokenGenerator {
-	
-	public let regularExpression: NSRegularExpression
+    
+    public let regularExpression: NSRegularExpression
+    
+    public let highligterRegularExpression: NSRegularExpression?
 	
 	public let tokenTransformer: TokenTransformer
 	
-	public init(regularExpression: NSRegularExpression, tokenTransformer: @escaping TokenTransformer) {
+	public init(regularExpression: NSRegularExpression, highligterRegularExpression: NSRegularExpression? = nil, tokenTransformer: @escaping TokenTransformer) {
 		self.regularExpression = regularExpression
+        self.highligterRegularExpression = highligterRegularExpression
 		self.tokenTransformer = tokenTransformer
 	}
 }
@@ -78,15 +81,11 @@ extension RegexLexer {
 
 		var tokens = [Token]()
 
-		source.enumerateSubstrings(in: source.startIndex..<source.endIndex, options: [.byWords]) { (word, range, _, _) in
-
+		source.enumerateSubstrings(in: source.startIndex ..< source.endIndex, options: [.byWords]) { (word, range, _, _) in
 			if let word = word, generator.keywords.contains(word) {
-
 				let token = generator.tokenTransformer(range)
 				tokens.append(token)
-
 			}
-
 		}
 
 		return tokens
@@ -97,18 +96,27 @@ extension RegexLexer {
 		var tokens = [Token]()
 
 		let fullNSRange = NSRange(location: 0, length: source.utf16.count)
-		for numberMatch in generator.regularExpression.matches(in: source, options: [], range: fullNSRange) {
+        for numberMatch in generator.regularExpression.matches(in: source, options: [], range: fullNSRange) {
 			
 			guard let swiftRange = Range(numberMatch.range, in: source) else {
 				continue
 			}
-			
-			let token = generator.tokenTransformer(swiftRange)
-			tokens.append(token)
-			
+            
+            if let regularExpression = generator.highligterRegularExpression,
+               let highlightNSRange = regularExpression.firstMatch(in: source, options: [], range: numberMatch.range) {
+                
+                guard let swiftHiglightRange = Range(highlightNSRange.range, in: source) else {
+                    continue
+                }
+                
+                let token = generator.tokenTransformer(swiftHiglightRange)
+                tokens.append(token)
+            } else {
+                let token = generator.tokenTransformer(swiftRange)
+                tokens.append(token)
+            }
 		}
 		
 		return tokens
 	}
-
 }
