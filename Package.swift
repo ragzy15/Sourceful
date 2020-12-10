@@ -13,7 +13,10 @@ let package = Package(
         // Products define the executables and libraries produced by a package, and make them visible to other packages.
         .library(
             name: "Sourceful",
-            targets: ["Sourceful", "SourcefulPrettier"]),
+            targets: ["Sourceful"]),
+        .library(
+            name: "SourcefulPrettier",
+            targets: ["SourcefulPrettier"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
