@@ -7,13 +7,4 @@
 
 import Foundation
 
-public class HTMLLexer: SourceCodeRegexLexer {
-    
-    public init() {
-        
-    }
-    
-    public func generators(source: String) -> [TokenGenerator] {
-        return []
-    }
-}
+public typealias HTMLLexer = XMLLexer

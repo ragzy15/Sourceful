@@ -13,8 +13,10 @@ public enum SourceCodeTokenType {
 	case number
 	case string
 	case identifier
-	case keyword
-	case comment
+    case attribute
+    case keyword
+    case docType
+    case comment
 	case editorPlaceholder
 }
 

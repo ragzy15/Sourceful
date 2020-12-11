@@ -11,10 +11,6 @@ import Foundation
 
 public class Python3Lexer: SourceCodeRegexLexer {
 	
-	public init() {
-		
-	}
-	
 	lazy var generators: [TokenGenerator] = {
 		
 		var generators = [TokenGenerator?]()
@@ -45,6 +41,10 @@ public class Python3Lexer: SourceCodeRegexLexer {
 
 		return generators.compactMap( { $0 })
 	}()
+    
+    public init() {
+        
+    }
 	
 	public func generators(source: String) -> [TokenGenerator] {
 		return generators

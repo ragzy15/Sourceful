@@ -10,10 +10,6 @@ import Foundation
 
 public class JavaScriptLexer: SourceCodeRegexLexer {
     
-    public init() {
-        
-    }
-    
     lazy var generators: [TokenGenerator] = {
         
         var generators = [TokenGenerator?]()
@@ -58,8 +54,11 @@ public class JavaScriptLexer: SourceCodeRegexLexer {
         return generators.compactMap( { $0 })
     }()
     
+    public init() {
+        
+    }
+    
     public func generators(source: String) -> [TokenGenerator] {
         return generators
     }
-    
 }

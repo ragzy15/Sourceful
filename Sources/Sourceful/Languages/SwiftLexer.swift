@@ -10,10 +10,6 @@ import Foundation
 
 public class SwiftLexer: SourceCodeRegexLexer {
 	
-	public init() {
-		
-	}
-	
 	lazy var generators: [TokenGenerator] = {
 		
 		var generators = [TokenGenerator?]()
@@ -56,6 +52,10 @@ public class SwiftLexer: SourceCodeRegexLexer {
 
 		return generators.compactMap( { $0 })
 	}()
+    
+    public init() {
+        
+    }
 	
 	public func generators(source: String) -> [TokenGenerator] {
 		return generators

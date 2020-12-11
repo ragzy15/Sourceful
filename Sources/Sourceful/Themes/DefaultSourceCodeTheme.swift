@@ -40,6 +40,12 @@ public struct DefaultSourceCodeTheme: SourceCodeTheme {
 			
 		case .identifier:
 			return SFColor(red: 20/255, green: 156/255, blue: 146/255, alpha: 1.0)
+            
+        case .attribute:
+            return SFColor.yellow
+            
+        case .docType:
+            return SFColor.gray
 			
 		case .keyword:
 			return SFColor(red: 215/255, green: 0, blue: 143/255, alpha: 1.0)

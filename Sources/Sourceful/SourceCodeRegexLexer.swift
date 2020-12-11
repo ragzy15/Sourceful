@@ -14,20 +14,20 @@ public protocol SourceCodeRegexLexer: RegexLexer {
 extension RegexLexer {
     
     public func regexGenerator(_ identifierPattern: String, highlighterPattern: String?, options: NSRegularExpression.Options = [], transformer: @escaping TokenTransformer) -> TokenGenerator? {
-		
-		guard let regex = try? NSRegularExpression(pattern: identifierPattern, options: options) else {
-			return nil
-		}
         
-        if let highlighterPattern = highlighterPattern {
-            guard let highlightRegex = try? NSRegularExpression(pattern: highlighterPattern, options: options) else {
-                return nil
+        do {
+            let regex = try NSRegularExpression(pattern: identifierPattern, options: options)
+            
+            if let highlighterPattern = highlighterPattern {
+                let highlightRegex = try NSRegularExpression(pattern: highlighterPattern, options: options)
+                
+                return .regex(RegexTokenGenerator(regularExpression: regex, highligterRegularExpression: highlightRegex, tokenTransformer: transformer))
             }
             
-            return .regex(RegexTokenGenerator(regularExpression: regex, highligterRegularExpression: highlightRegex, tokenTransformer: transformer))
+            return .regex(RegexTokenGenerator(regularExpression: regex, tokenTransformer: transformer))
+        } catch {
+            return nil
         }
-		
-		return .regex(RegexTokenGenerator(regularExpression: regex, tokenTransformer: transformer))
 	}
 
 }
