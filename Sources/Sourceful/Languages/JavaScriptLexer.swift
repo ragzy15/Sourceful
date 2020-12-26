@@ -10,6 +10,8 @@ import Foundation
 
 public class JavaScriptLexer: SourceCodeRegexLexer {
     
+    public static let shared = JavaScriptLexer()
+    
     lazy var generators: [TokenGenerator] = {
         
         var generators = [TokenGenerator?]()

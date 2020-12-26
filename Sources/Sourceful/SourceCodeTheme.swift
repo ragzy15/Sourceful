@@ -11,7 +11,6 @@ import Foundation
 public protocol SourceCodeTheme: SyntaxColorTheme {
 	
 	func color(for syntaxColorType: SourceCodeTokenType) -> SFColor
-	
 }
 
 extension SourceCodeTheme {

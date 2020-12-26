@@ -9,6 +9,8 @@ import Foundation
 
 public class PlainTextLexer: SourceCodeRegexLexer {
     
+    public static let shared = PlainTextLexer()
+    
     public init() {
         
     }

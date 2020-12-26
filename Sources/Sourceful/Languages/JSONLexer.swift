@@ -9,6 +9,8 @@ import Foundation
 
 public class JSONLexer: SourceCodeRegexLexer {
     
+    public static let shared = JSONLexer()
+    
     lazy var generators: [TokenGenerator] = {
         
         var generators = [TokenGenerator?]()

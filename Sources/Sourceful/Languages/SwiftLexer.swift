@@ -9,6 +9,8 @@
 import Foundation
 
 public class SwiftLexer: SourceCodeRegexLexer {
+    
+    public static let shared = SwiftLexer()
 	
 	lazy var generators: [TokenGenerator] = {
 		

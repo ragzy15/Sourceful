@@ -44,7 +44,6 @@ extension SFTextView {
 		
 		return sectionRect
 	}
-	
 }
 
 func generateParagraphs(for textView: InnerTextView, flipRects: Bool = false) -> [Paragraph] {
@@ -78,34 +77,24 @@ func generateParagraphs(for textView: InnerTextView, flipRects: Bool = false) ->
 		let lineHeight: CGFloat = 18
 		
 		if let last = paragraphs.last {
-			
 			// FIXME: don't use hardcoded "2" as line spacing
 			rect = CGRect(x: 0, y: last.rect.origin.y + last.rect.height + 2, width: gutterWidth, height: last.rect.height)
-			
 		} else {
-			
 			rect = CGRect(x: 0, y: 0, width: gutterWidth, height: lineHeight)
-			
 		}
-		
 		
 		i += 1
 		let endParagraph = Paragraph(rect: rect, number: i)
 		paragraphs.append(endParagraph)
-		
 	}
 	
-	
 	if flipRects {
-		
 		paragraphs = paragraphs.map { (p) -> Paragraph in
-			
 			var p = p
 			p.rect.origin.y = textView.bounds.height - p.rect.height - p.rect.origin.y
 			
 			return p
 		}
-		
 	}
 	
 	return paragraphs
@@ -116,22 +105,18 @@ func offsetParagraphs(_ paragraphs: [Paragraph], for textView: InnerTextView, yO
 	var paragraphs = paragraphs
 	
 	#if os(macOS)
-		
-		if let yOffset = textView.enclosingScrollView?.contentView.bounds.origin.y {
-			
-			paragraphs = paragraphs.map { (p) -> Paragraph in
-				
-				var p = p
-				p.rect.origin.y += yOffset
-				
-				return p
-			}
-		}
-		
-		
+    
+    if let yOffset = textView.enclosingScrollView?.contentView.bounds.origin.y {
+        paragraphs = paragraphs.map { (p) -> Paragraph in
+            
+            var p = p
+            p.rect.origin.y += yOffset
+            
+            return p
+        }
+    }
+    
 	#endif
-	
-	
 	
 	paragraphs = paragraphs.map { (p) -> Paragraph in
 		
