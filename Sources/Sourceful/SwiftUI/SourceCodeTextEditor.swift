@@ -65,7 +65,7 @@ public struct SourceCodeTextEditor: _ViewRepresentable {
     
     public struct EditorCusomtization {
         public let isEditable: Bool
-        
+        public let notificationObject: AnyObject?
         #if os(iOS)
         public let isScrollEnabled: Bool
         public let contentInset: UIEdgeInsets
@@ -73,19 +73,21 @@ public struct SourceCodeTextEditor: _ViewRepresentable {
         
         public init(isEditable: Bool = true, isScrollEnabled: Bool = true,
                     allowsEditingTextAttributes: Bool = false,
+                    notificationObject: AnyObject?,
                     contentInset: UIEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 100, right: 0)) {
             
             self.isEditable = isEditable
             self.isScrollEnabled = isScrollEnabled
             self.allowsEditingTextAttributes = allowsEditingTextAttributes
+            self.notificationObject = notificationObject
             self.contentInset = contentInset
         }
         #endif
         
         #if os(macOS)
-        public init(isEditable: Bool = true) {
-            
+        public init(isEditable: Bool = true, notificationObject: AnyObject?) {
             self.isEditable = isEditable
+            self.notificationObject = notificationObject
         }
         #endif
     }
@@ -97,7 +99,7 @@ public struct SourceCodeTextEditor: _ViewRepresentable {
     private let sourceCodeCustomization: SourceCodeCustomization
     private let editorCustomization: EditorCusomtization
     
-    public init(text: Binding<String>, fixedHeight: Binding<CGFloat> = .constant(0), width: CGFloat? = nil, customization: SourceCodeCustomization, editorCustomization: EditorCusomtization = EditorCusomtization()) {
+    public init(text: Binding<String>, fixedHeight: Binding<CGFloat> = .constant(0), width: CGFloat? = nil, customization: SourceCodeCustomization, editorCustomization: EditorCusomtization = EditorCusomtization(notificationObject: nil)) {
         self._text = text
         self._fixedHeight = fixedHeight
         self.width = width
@@ -164,14 +166,15 @@ extension SourceCodeTextEditor {
         init(_ parent: SourceCodeTextEditor) {
             self.parent = parent
             
-            NotificationCenter.default.publisher(for: SourceCodeTextEditor.textUpdateNotification)
+            NotificationCenter.default.publisher(for: SourceCodeTextEditor.textUpdateNotification, object: parent.editorCustomization.notificationObject)
                 .compactMap { $0.userInfo?["text"] as? String }
                 .receive(on: DispatchQueue.main)
-                .sink(receiveValue: { (newText) in
-                    self.wrappedView.text = newText
+                .sink(receiveValue: { [weak self] (newText) in
+                    self?.wrappedView.text = newText
                 })
                 .store(in: &cancellableBag)
             
+            #if os(iOS)
             NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)
                 .compactMap { $0.userInfo }
                 .receive(on: DispatchQueue.main)
@@ -191,6 +194,7 @@ extension SourceCodeTextEditor {
                     }
                 }
                 .store(in: &cancellableBag)
+            #endif
         }
         
         public func lexerForSource(_ source: String) -> Lexer {
@@ -201,8 +205,13 @@ extension SourceCodeTextEditor {
             DispatchQueue.main.async {
                 self.parent.text = syntaxTextView.text
                 if let width = self.parent.width {
+                    #if os(iOS)
                     let insetWidth = syntaxTextView.textView.textContainerInset.left + syntaxTextView.textView.textContainerInset.right
                     let size = syntaxTextView.textView.sizeThatFits(CGSize(width: width - insetWidth, height: .infinity))
+                    #else
+                    syntaxTextView.textView.sizeToFit()
+                    let size = syntaxTextView.textView.fittingSize
+                    #endif
                     self.parent.fixedHeight = size.height
                 }
             }
