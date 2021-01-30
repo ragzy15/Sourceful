@@ -22,7 +22,19 @@ public struct DefaultSourceCodeTheme: SourceCodeTheme {
 	
 	public let gutterStyle: GutterStyle = GutterStyle(backgroundColor: SFColor(red: 21/255.0, green: 22/255, blue: 31/255, alpha: 1.0), minimumWidth: 32)
 	
-	public let font = SFFont(name: "Menlo", size: 15)!
+    public let font: SFFont = {
+        #if os(iOS)
+        return SFFont.preferredFont(forTextStyle: .body)
+        #endif
+        
+        #if os(macOS)
+        if #available(macOS 11.0, *) {
+           return SFFont.preferredFont(forTextStyle: .body)
+        } else {
+            return SFFont.systemFont(ofSize: SFFont.systemFontSize)
+        }
+        #endif
+    }()
 	
 	public let backgroundColor = SFColor(red: 31/255.0, green: 32/255, blue: 41/255, alpha: 1.0)
 	

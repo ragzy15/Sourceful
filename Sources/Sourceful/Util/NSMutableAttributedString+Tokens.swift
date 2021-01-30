@@ -47,7 +47,6 @@ public extension NSMutableAttributedString {
 		self.setAttributes(attributes, range: wholeRange)
 		
 		for token in tokens {
-			
 			if token.isPlain {
 				continue
 			}
@@ -67,19 +66,17 @@ public extension NSMutableAttributedString {
 				
 				attr[.editorPlaceholder] = EditorPlaceholderState.inactive
 				
-				self.addAttributes(theme.attributes(for: token), range: contentRange)
+				addAttributes(theme.attributes(for: token), range: contentRange)
 				
-				self.addAttributes([.foregroundColor: SFColor.clear, .font: SFFont.systemFont(ofSize: 0.01)], range: startRange)
-				self.addAttributes([.foregroundColor: SFColor.clear, .font: SFFont.systemFont(ofSize: 0.01)], range: endRange)
+				addAttributes([.foregroundColor: SFColor.clear, .font: SFFont.systemFont(ofSize: 0.01)], range: startRange)
+				addAttributes([.foregroundColor: SFColor.clear, .font: SFFont.systemFont(ofSize: 0.01)], range: endRange)
 				
-				self.addAttributes(attr, range: range)
+				addAttributes(attr, range: range)
+                
 				continue
 			}
 			
-			self.setAttributes(theme.attributes(for: token), range: range)
-			
+			setAttributes(theme.attributes(for: token), range: range)
 		}
-		
 	}
-	
 }

@@ -10,6 +10,8 @@
 import Foundation
 
 public class Python3Lexer: SourceCodeRegexLexer {
+    
+    public static let shared = Python3Lexer()
 	
 	lazy var generators: [TokenGenerator] = {
 		

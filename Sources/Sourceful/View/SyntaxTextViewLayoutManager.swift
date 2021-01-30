@@ -23,7 +23,6 @@ public enum EditorPlaceholderState {
 public extension NSAttributedString.Key {
 	
 	static let editorPlaceholder = NSAttributedString.Key("editorPlaceholder")
-
 }
 
 class SyntaxTextViewLayoutManager: NSLayoutManager {
@@ -31,17 +30,13 @@ class SyntaxTextViewLayoutManager: NSLayoutManager {
 	override func drawGlyphs(forGlyphRange glyphsToShow: NSRange, at origin: CGPoint) {
 		
 		#if os(macOS)
-
 			guard let context = NSGraphicsContext.current else {
 				return
 			}
-			
 		#else
-		
 			guard let context = UIGraphicsGetCurrentContext() else {
 				return
 			}
-			
 		#endif
 		
 		let range = characterRange(forGlyphRange: glyphsToShow, actualGlyphRange: nil)
@@ -49,7 +44,6 @@ class SyntaxTextViewLayoutManager: NSLayoutManager {
 		var placeholders = [(CGRect, EditorPlaceholderState)]()
 		
 		textStorage?.enumerateAttribute(.editorPlaceholder, in: range, options: [], using: { (value, range, stop) in
-			
 			if let state = value as? EditorPlaceholderState {
 				
 				// the color set above
@@ -59,21 +53,15 @@ class SyntaxTextViewLayoutManager: NSLayoutManager {
 				let rect = self.boundingRect(forGlyphRange: glyphRange, in: container ?? NSTextContainer())
 				
 				placeholders.append((rect, state))
-				
 			}
-			
 		})
 		
 		#if os(macOS)
-
 			context.saveGraphicsState()
 			context.cgContext.translateBy(x: origin.x, y: origin.y)
-		
 		#else
-			
 			context.saveGState()
 			context.translateBy(x: origin.x, y: origin.y)
-		
 		#endif
 		
 		for (rect, state) in placeholders {
@@ -94,31 +82,20 @@ class SyntaxTextViewLayoutManager: NSLayoutManager {
 			let radius: CGFloat = 4.0
 			
 			#if os(macOS)
-
 				let path = SFBezierPath(roundedRect: rect, xRadius: radius, yRadius: radius)
-
 			#else
-				
 				let path = SFBezierPath(roundedRect: rect, cornerRadius: radius)
-
 			#endif
 			
 			path.fill()
-			
 		}
 		
 		#if os(macOS)
-
 			context.restoreGraphicsState()
-
 		#else
-
 			context.restoreGState()
-
 		#endif
 
 		super.drawGlyphs(forGlyphRange: glyphsToShow, at: origin)
-
 	}
-	
 }

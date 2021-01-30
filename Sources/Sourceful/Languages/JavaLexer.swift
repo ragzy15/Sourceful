@@ -9,6 +9,8 @@ import Foundation
 
 public class JavaLexer: SourceCodeRegexLexer {
     
+    public static let shared = JavaLexer()
+    
     lazy var generators: [TokenGenerator] = {
         
         var generators = [TokenGenerator?]()
